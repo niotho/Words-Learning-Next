@@ -12,4 +12,7 @@ public interface SourceRepository {
 
     //save
     void save(Source source);
+
+    //update
+    void update(Source source);
 }

@@ -6,11 +6,9 @@ import com.example.wordNext.service.SourceService;
 import com.example.wordNext.service.WordService;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Controller;
+import org.springframework.stereotype.Repository;
 import org.springframework.ui.Model;
-import org.springframework.web.bind.annotation.GetMapping;
-import org.springframework.web.bind.annotation.PathVariable;
-import org.springframework.web.bind.annotation.PostMapping;
-import org.springframework.web.bind.annotation.RequestParam;
+import org.springframework.web.bind.annotation.*;
 
 import java.util.List;
 
@@ -36,6 +34,44 @@ public class MainController {
         return "home-page";
     }
 
+    @GetMapping("/showFormForAddSource")
+    public String showFormForAddSource(Model model){
+
+        Source source = new Source();
+
+        model.addAttribute("source", source);
+
+        return "add-source";
+    }
+
+//    @GetMapping("/showFormForUpdate")
+//    public String update(Model model, @RequestParam Long sourceId){
+//
+//        Source oldSource = sourceService.findById(sourceId);
+//        Source newSource = new Source();
+//
+//        model.addAttribute("oldSource", oldSource);
+//        model.addAttribute("newSource", newSource);
+//
+//        return "update-source";
+//    }
+
+    @PostMapping("/save")
+    public String save(@ModelAttribute Source source){
+
+        sourceService.save(source);
+
+        return "redirect:/home";
+    }
+
+//    @PostMapping("/update")
+//    public String update(@ModelAttribute Source oldSource, @ModelAttribute Source newSource){
+//
+//        sourceService.update(oldSource, newSource);
+//
+//        return "redirect:/home";
+//    }
+
     @GetMapping("/source/{sourceId}")
     public String source(@PathVariable("sourceId") Long id, Model model){
 
@@ -48,5 +84,31 @@ public class MainController {
     }
 
     @PostMapping("/source/save")
-    public String save(@RequestParam)
+    public String save(Model model,
+                       @RequestParam String wordName,
+                       @RequestParam String wordMeaning,
+                       @RequestParam String wordStatus,
+                       @RequestParam String wordLOI,
+                       @RequestParam Long wordSourceId){
+
+        Source source = sourceService.findById(wordSourceId);
+
+        Word word = new Word(wordName, wordMeaning, wordStatus, wordLOI, source);
+
+        wordService.save(word, source);
+
+        return "redirect:/home";
+    }
 }
+
+
+
+
+
+
+
+
+
+
+
+

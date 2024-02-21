@@ -6,6 +6,7 @@ import jakarta.persistence.EntityManager;
 import jakarta.persistence.TypedQuery;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Repository;
+import org.springframework.transaction.annotation.Transactional;
 
 import java.util.List;
 
@@ -44,6 +45,7 @@ public class WordRepositoryImpl implements WordRepository{
         return words;
     }
 
+    @Transactional
     @Override
     public Word save(Word word) {
 
@@ -52,6 +54,7 @@ public class WordRepositoryImpl implements WordRepository{
         return null;
     }
 
+    @Transactional
     @Override
     public Word update(Word word) {
         return null;

@@ -12,23 +12,37 @@
 
 <a th:text="${sourceId}"></a>
 
-<form action="#" th:action="@{/}" method="POST">
-    <input>
-    <input>
+<form action="#" th:action="@{/source/save}" method="POST">
+    <input type="text" name="wordName" placeholder="Word">
+    <input type="text" name="wordMeaning" placeholder="Meaning">
+    <input type="text" name="wordStatus" placeholder="Status">
+    <input type="text" name="wordLOI" placeholder="Level Of Importance">
+    <input type="hidden" name="wordSourceId" th:value="${sourceId}">
+
+    <input type="submit" value="Submit">
 </form>
 
 <table class="table table-hover">
     <tr>
         <th>id</th>
-        <th>genre</th>
-        <th>source name</th>
+        <th>word</th>
+        <th>meaning</th>
+        <th>status</th>
+        <th>Level Of Importance</th>
+        <th>source id</th>
         <th>Action</th>
     </tr>
     <tr th:each="word : ${words}">
         <td th:text="${word.id}"></td>
         <td th:text="${word.word}"></td>
         <td th:text="${word.meaning}"></td>
-        <!--        <a th:href="@{/course/deleteCourse(courseId=${course.id})}">Delete</a>-->
+        <td th:text="${word.status}"></td>
+        <td th:text="${word.levelOfImportance}"></td>
+        <td th:text="${word.source.id}"></td>
+        <td>
+            <a>Update</a>
+            <a>Delete</a>
+        </td>
     </tr>
 </table>
 

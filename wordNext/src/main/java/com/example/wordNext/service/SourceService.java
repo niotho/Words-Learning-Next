@@ -24,4 +24,20 @@ public class SourceService {
     public List<Source> findAll(){
         return sourceRepository.findAll();
     }
+
+    public void save(Source source){
+        sourceRepository.save(source);
+    }
+
+    public void update(Source oldSource, Source newSource){
+
+        if(newSource.getGenre() != null){
+            oldSource.setGenre(newSource.getGenre());
+        }
+        if(newSource.getName() != null){
+            oldSource.setName(newSource.getName());
+        }
+
+        sourceRepository.update(oldSource);
+    }
 }
