@@ -24,7 +24,7 @@ public class Word {
     @Column(name = "LOI")
     private String levelOfImportance;
 
-    @ManyToOne(cascade = CascadeType.ALL)
+    @ManyToOne(cascade = {CascadeType.DETACH, CascadeType.MERGE, CascadeType.PERSIST})
     @JoinColumn(name = "show_id")
     private Source source;
 

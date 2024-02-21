@@ -6,6 +6,7 @@ import com.example.wordNext.repository.SourceRepository;
 import com.example.wordNext.repository.WordRepository;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Service;
+import org.springframework.transaction.annotation.Transactional;
 
 import java.util.List;
 
@@ -34,6 +35,7 @@ public class WordService {
     }
 
     //save
+    @Transactional
     public void save(Word word, Source source){
 
         word.setSource(source);
@@ -41,20 +43,16 @@ public class WordService {
 
         sourceRepository.save(source);
     }
+
+    //delete
+    @Transactional
+    public void deleteById(Long id){
+
+        Word word = wordRepository.findById(id);
+
+        wordRepository.delete(word);
+    }
 }
-
-
-
-
-
-
-
-
-
-
-
-
-
 
 
 

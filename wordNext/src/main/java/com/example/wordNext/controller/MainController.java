@@ -97,7 +97,18 @@ public class MainController {
 
         wordService.save(word, source);
 
-        return "redirect:/home";
+        return String.format("redirect:/source/%d", wordSourceId);
+    }
+
+    @GetMapping("/delete")
+    public String delete(@RequestParam("wordId") Long wordId){
+
+        Word word = wordService.findById(wordId);
+        Long wordSourceId = word.getSource().getId();
+
+        wordService.deleteById(wordId);
+
+        return String.format("redirect:/source/%d", wordSourceId);
     }
 }
 

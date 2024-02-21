@@ -45,18 +45,21 @@ public class WordRepositoryImpl implements WordRepository{
         return words;
     }
 
-    @Transactional
     @Override
     public Word save(Word word) {
 
+        entityManager.persist(word);
 
-
-        return null;
+        return word;
     }
 
-    @Transactional
     @Override
     public Word update(Word word) {
         return null;
+    }
+
+    @Override
+    public void delete(Word word) {
+        entityManager.remove(word);
     }
 }

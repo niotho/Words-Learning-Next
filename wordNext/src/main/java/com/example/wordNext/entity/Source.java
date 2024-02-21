@@ -23,7 +23,7 @@ public class Source {
     @Column(name = "show_name")
     private String name;
 
-    @OneToMany(mappedBy = "source", cascade = {CascadeType.DETACH, CascadeType.MERGE, CascadeType.PERSIST, CascadeType.REFRESH})
+    @OneToMany(mappedBy = "source", cascade = {CascadeType.DETACH, CascadeType.MERGE, CascadeType.PERSIST})
     private List<Word> words;
 
     public Source(String genre, String name) {

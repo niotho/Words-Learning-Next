@@ -35,13 +35,11 @@ public class SourceRepositoryImpl implements SourceRepository{
         return sources;
     }
 
-    @Transactional
     @Override
     public void save(Source source) {
         entityManager.persist(source);
     }
 
-    @Transactional
     @Override
     public void update(Source source) {
         entityManager.merge(source);

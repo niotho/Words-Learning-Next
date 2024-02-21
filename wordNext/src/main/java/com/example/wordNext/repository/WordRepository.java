@@ -16,4 +16,7 @@ public interface WordRepository {
 
     //update
     Word update(Word word);
+
+    //delete
+    void delete(Word word);
 }

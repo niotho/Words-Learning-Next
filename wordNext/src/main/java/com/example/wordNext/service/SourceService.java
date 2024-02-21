@@ -4,6 +4,7 @@ import com.example.wordNext.entity.Source;
 import com.example.wordNext.repository.SourceRepository;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Service;
+import org.springframework.transaction.annotation.Transactional;
 
 import java.util.List;
 
@@ -25,10 +26,12 @@ public class SourceService {
         return sourceRepository.findAll();
     }
 
+    @Transactional
     public void save(Source source){
         sourceRepository.save(source);
     }
 
+    @Transactional
     public void update(Source oldSource, Source newSource){
 
         if(newSource.getGenre() != null){
