@@ -44,17 +44,28 @@ public class MainController {
         return "add-source";
     }
 
-//    @GetMapping("/showFormForUpdate")
-//    public String update(Model model, @RequestParam Long sourceId){
-//
-//        Source oldSource = sourceService.findById(sourceId);
-//        Source newSource = new Source();
-//
-//        model.addAttribute("oldSource", oldSource);
-//        model.addAttribute("newSource", newSource);
-//
-//        return "update-source";
-//    }
+    @GetMapping("/showFormForUpdate")
+    public String update(Model model, @RequestParam Long sourceId){
+
+        Source source = sourceService.findById(sourceId);
+        Source newSource = new Source();
+
+        model.addAttribute("sourceId", sourceId);
+        model.addAttribute("newSource", newSource);
+
+        return "update-source";
+    }
+
+    @GetMapping("/source/showFormForUpdateWord")
+    public String showFormForUpdateWord(Model model, @RequestParam Long wordId){
+
+        Word newWord = new Word();
+
+        model.addAttribute("wordId", wordId);
+        model.addAttribute("newWord", newWord);
+
+        return "update-word";
+    }
 
     @PostMapping("/save")
     public String save(@ModelAttribute Source source){
@@ -64,13 +75,35 @@ public class MainController {
         return "redirect:/home";
     }
 
-//    @PostMapping("/update")
-//    public String update(@ModelAttribute Source oldSource, @ModelAttribute Source newSource){
-//
-//        sourceService.update(oldSource, newSource);
-//
-//        return "redirect:/home";
-//    }
+    @PostMapping("/update")
+    public String update(@RequestParam Long sourceId, @ModelAttribute Source newSource){
+
+        Source source = sourceService.findById(sourceId);
+
+        source.setName(newSource.getName());
+        source.setGenre(newSource.getGenre());
+
+        sourceService.save(source);
+
+        return "redirect:/home";
+    }
+
+    @PostMapping("/source/update")
+    public String updateWord(@RequestParam Long sourceId, @ModelAttribute Word newWord, @ModelAttribute Long wordId){
+
+        Word word = wordService.findById(wordId);
+
+        word.setWord(newWord.getWord());
+        word.setMeaning(newWord.getMeaning());
+        word.setStatus(newWord.getStatus());
+        word.setLevelOfImportance(newWord.getLevelOfImportance());
+
+        Source source = sourceService.findById(sourceId);
+
+        sourceService.save(source);
+
+        return "home-page";
+    }
 
     @GetMapping("/source/{sourceId}")
     public String source(@PathVariable("sourceId") Long id, Model model){

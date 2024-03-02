@@ -23,9 +23,9 @@
         <td th:text="${source.name}"></td>
         <td>
             <a class="btn btn-primary" th:href="@{/source/{sourceId}(sourceId=${source.id})}">Details</a>
-<!--            <a class="btn btn-primary" th:href="@{/showFormForUpdate(sourceId=${source.id})}">Update</a>-->
-        </td>
+            <a class="btn btn-primary" th:href="@{/showFormForUpdate(sourceId=${source.id})}">Update</a>
         <!--        <a th:href="@{/course/deleteCourse(courseId=${course.id})}">Delete</a>-->
+        </td>
     </tr>
 </table>
 

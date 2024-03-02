@@ -7,7 +7,7 @@
 </head>
 <body>
 
-<form action="#" th:action="@{/update}" method="POST">
+<form action="#" th:action="@{/update(sourceId=${sourceId})}" method="POST">
 
     <input type="text" th:field="${newSource.genre}" placeholder="Word">
     <input type="text" th:field="${newSource.name}" placeholder="Meaning">

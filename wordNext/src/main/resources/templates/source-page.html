@@ -40,7 +40,7 @@
         <td th:text="${word.levelOfImportance}"></td>
         <td th:text="${word.source.id}"></td>
         <td>
-            <a class="btn btn-primary">Update</a>
+            <a class="btn btn-primary" th:href="@{/source/update(wordId=${word.id})}">Update</a>
             <a class="btn btn-danger" th:href="@{/delete(wordId=${word.id})}">Delete</a>
         </td>
     </tr>
