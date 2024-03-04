@@ -19,6 +19,8 @@ public class Word {
 
     private String meaning;
 
+    private String category;
+
     private String status;
 
     @Column(name = "LOI")
@@ -31,6 +33,14 @@ public class Word {
     public Word(String word, String meaning, String status, String levelOfImportance) {
         this.word = word;
         this.meaning = meaning;
+        this.status = status;
+        this.levelOfImportance = levelOfImportance;
+    }
+
+    public Word(String word, String meaning, String category, String status, String levelOfImportance) {
+        this.word = word;
+        this.meaning = meaning;
+        this.category = category;
         this.status = status;
         this.levelOfImportance = levelOfImportance;
     }

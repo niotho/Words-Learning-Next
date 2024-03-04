@@ -31,6 +31,12 @@ public class Source {
         this.name = name;
     }
 
+    public Source(Long id, String genre, String name) {
+        this.id = id;
+        this.genre = genre;
+        this.name = name;
+    }
+
     public void addWord(Word word){
         if(words == null){
             words = new ArrayList<>();
