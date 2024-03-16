@@ -8,6 +8,7 @@ import lombok.*;
 @NoArgsConstructor
 @Getter
 @Setter
+@ToString
 @Table(name = "word_list")
 public class Word {
 
@@ -26,7 +27,7 @@ public class Word {
     @Column(name = "LOI")
     private String levelOfImportance;
 
-    @ManyToOne(cascade = {CascadeType.DETACH, CascadeType.MERGE, CascadeType.PERSIST})
+    @ManyToOne(fetch = FetchType.EAGER, cascade = {CascadeType.DETACH, CascadeType.MERGE, CascadeType.PERSIST, CascadeType.REFRESH})
     @JoinColumn(name = "show_id")
     private Source source;
 
@@ -48,6 +49,15 @@ public class Word {
     public Word(String word, String meaning, String status, String levelOfImportance, Source source) {
         this.word = word;
         this.meaning = meaning;
+        this.status = status;
+        this.levelOfImportance = levelOfImportance;
+        this.source = source;
+    }
+
+    public Word(String word, String meaning, String category, String status, String levelOfImportance, Source source) {
+        this.word = word;
+        this.meaning = meaning;
+        this.category = category;
         this.status = status;
         this.levelOfImportance = levelOfImportance;
         this.source = source;

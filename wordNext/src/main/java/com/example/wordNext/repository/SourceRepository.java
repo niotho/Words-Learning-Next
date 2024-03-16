@@ -12,4 +12,6 @@ public interface SourceRepository extends JpaRepository<Source, Long>{
 
     List<Source> findAllByGenre(String genre);
     Source findByName(String name);
+
+    void deleteSourceById(Long id);
 }

@@ -10,6 +10,7 @@ import java.util.List;
 @NoArgsConstructor
 @Getter
 @Setter
+@ToString
 @Table(name = "shows")
 @Entity
 public class Source {
@@ -23,7 +24,7 @@ public class Source {
     @Column(name = "show_name")
     private String name;
 
-    @OneToMany(mappedBy = "source", cascade = {CascadeType.DETACH, CascadeType.MERGE, CascadeType.PERSIST})
+    @OneToMany(fetch = FetchType.EAGER, mappedBy = "source", cascade = {CascadeType.DETACH, CascadeType.MERGE, CascadeType.PERSIST, CascadeType.REMOVE, CascadeType.REFRESH})
     private List<Word> words;
 
     public Source(String genre, String name) {
@@ -43,6 +44,12 @@ public class Source {
         }
 
         words.add(word);
+    }
+
+    public void removeWord(Word word){
+        if(words.contains(word)){
+            words.remove(word);
+        }
     }
 
     @Override

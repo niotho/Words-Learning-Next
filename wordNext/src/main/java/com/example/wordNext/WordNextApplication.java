@@ -8,6 +8,7 @@ public class WordNextApplication {
 
 	public static void main(String[] args) {
 		SpringApplication.run(WordNextApplication.class, args);
-	}
 
+
+	}
 }
