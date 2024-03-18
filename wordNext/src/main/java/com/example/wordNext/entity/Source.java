@@ -46,12 +46,6 @@ public class Source {
         words.add(word);
     }
 
-    public void removeWord(Word word){
-        if(words.contains(word)){
-            words.remove(word);
-        }
-    }
-
     @Override
     public String toString() {
         return "Source{" +

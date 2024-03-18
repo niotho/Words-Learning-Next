@@ -10,12 +10,15 @@ import org.springframework.data.repository.query.Param;
 import org.springframework.stereotype.Repository;
 import org.springframework.transaction.annotation.Transactional;
 
+import java.time.LocalDateTime;
 import java.util.List;
+import java.util.Optional;
 
 @Repository
 public interface WordRepository extends JpaRepository<Word, Long>{
 
     Word findByWord(String word);
+    Word findFirstByOrderByRepeatDateAsc();
 
     List<Word> findByCategory(String category);
 
@@ -24,6 +27,8 @@ public interface WordRepository extends JpaRepository<Word, Long>{
     List<Word> findByLevelOfImportance(String LOI);
 
     List<Word> findBySource(Source source);
+
+    List<Word> findAllByOrderByRepeatDateDesc();
 
     @Modifying
     @Query(value = "DELETE FROM word_list WHERE id = :id", nativeQuery = true)

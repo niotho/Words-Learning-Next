@@ -6,14 +6,22 @@ import com.example.wordNext.repository.WordRepository;
 import com.example.wordNext.service.SourceService;
 import com.example.wordNext.service.WordService;
 import org.springframework.beans.factory.annotation.Autowired;
+import org.springframework.beans.factory.annotation.Value;
 import org.springframework.stereotype.Controller;
 import org.springframework.ui.Model;
 import org.springframework.web.bind.annotation.*;
 
+import java.time.LocalDateTime;
 import java.util.List;
 
 @Controller
 public class HomeController {
+
+    @Value("#{'${word.categories}'.split(',')}")
+    private List<String> categories;
+
+    @Value("#{'${word.LOIs}'.split(',')}")
+    private List<String> LOIs;
 
     private SourceService sourceService;
     private WordService wordService;
@@ -81,6 +89,8 @@ public class HomeController {
 
         model.addAttribute("word", word);
         model.addAttribute("sourceId", id);
+        model.addAttribute("categories", categories);
+        model.addAttribute("LOIs", LOIs);
 
         return "/source/create-word";
     }
@@ -95,7 +105,9 @@ public class HomeController {
 
         Source source = sourceService.findById(sourceId);
 
-        Word newWord = new Word(wordName, wordMeaning, wordCategory, wordStatus, wordLOI, source);
+        LocalDateTime dateTime = LocalDateTime.now();
+
+        Word newWord = new Word(wordName, wordMeaning, wordCategory, wordStatus, wordLOI, dateTime, source);
 
         source.addWord(newWord);
 
@@ -196,33 +208,3 @@ public class HomeController {
         return "redirect:/source";
     }
 }
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-

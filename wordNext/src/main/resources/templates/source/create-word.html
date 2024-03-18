@@ -11,10 +11,15 @@
 
 <form action="#" th:action="@{/source/saveWord}" method="POST">
     <input type="text" name="wordName" placeholder="Word">
-    <input type="text" name="wordMeaning" placeholder="Meaning">
-    <input type="text" name="wordCategory" placeholder="Meaning">
-    <input type="text" name="wordStatus" placeholder="Status">
-    <input type="text" name="wordLOI" placeholder="Level Of Importance">
+    <textarea type="text" name="wordMeaning" placeholder="Meaning"></textarea>
+    <select name="wordCategory">
+        <option th:each="category : ${categories}" th:value="${category}" th:text="${category}"></option>
+    </select>
+    <input type="hidden" name="wordStatus" value="0" placeholder="Status">
+    <select name="wordLOI">
+        <option th:each="LOI : ${LOIs}" th:value="${LOI}" th:text="${LOI}"></option>
+    </select>
+<!--    <input type="text" name="wordLOI" placeholder="Level Of Importance">-->
     <input type="hidden" name="sourceId" th:value="${sourceId}">
 
     <input type="submit" value="Submit">

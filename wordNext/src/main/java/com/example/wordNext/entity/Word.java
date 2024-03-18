@@ -3,12 +3,13 @@ package com.example.wordNext.entity;
 import jakarta.persistence.*;
 import lombok.*;
 
+import java.time.LocalDateTime;
+
 @Entity
 @AllArgsConstructor
 @NoArgsConstructor
 @Getter
 @Setter
-@ToString
 @Table(name = "word_list")
 public class Word {
 
@@ -24,6 +25,9 @@ public class Word {
 
     private String status;
 
+    @Column(name = "repeat_date")
+    private LocalDateTime repeatDate;
+
     @Column(name = "LOI")
     private String levelOfImportance;
 
@@ -31,35 +35,13 @@ public class Word {
     @JoinColumn(name = "show_id")
     private Source source;
 
-    public Word(String word, String meaning, String status, String levelOfImportance) {
-        this.word = word;
-        this.meaning = meaning;
-        this.status = status;
-        this.levelOfImportance = levelOfImportance;
-    }
-
-    public Word(String word, String meaning, String category, String status, String levelOfImportance) {
+    public Word(String word, String meaning, String category, String status, String levelOfImportance, LocalDateTime repeatDate,  Source source) {
         this.word = word;
         this.meaning = meaning;
         this.category = category;
         this.status = status;
         this.levelOfImportance = levelOfImportance;
-    }
-
-    public Word(String word, String meaning, String status, String levelOfImportance, Source source) {
-        this.word = word;
-        this.meaning = meaning;
-        this.status = status;
-        this.levelOfImportance = levelOfImportance;
-        this.source = source;
-    }
-
-    public Word(String word, String meaning, String category, String status, String levelOfImportance, Source source) {
-        this.word = word;
-        this.meaning = meaning;
-        this.category = category;
-        this.status = status;
-        this.levelOfImportance = levelOfImportance;
+        this.repeatDate = repeatDate;
         this.source = source;
     }
 

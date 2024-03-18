@@ -33,6 +33,7 @@
                 <th>id</th>
                 <th>Word</th>
                 <th>Meaning</th>
+                <th>Category</th>
                 <th>Status</th>
                 <th>LOI</th>
                 <th>Action</th>
@@ -41,12 +42,13 @@
                 <td th:text="${word.id}"></td>
                 <td th:text="${word.word}"></td>
                 <td th:text="${word.meaning}"></td>
+                <td th:text="${word.category}"></td>
                 <td th:text="${word.status}"></td>
                 <td th:text="${word.levelOfImportance}"></td>
                 <td>
-                    <a th:href="@{/word/info/{id}(id=${word.id})}" class="btn btn-primary">Info</a>
+<!--                    <a th:href="@{/word/info/{id}(id=${word.id})}" class="btn btn-primary">Info</a>-->
 <!--                    <a th:href="@{/source/deleteWord(id=${word.id})}" class="btn btn-danger">Delete</a>-->
-                    <a th:href="@{/source/showUpdateWord(id=${word.id})}" class="btn btn-primary">Update</a>
+<!--                    <a th:href="@{/source/showUpdateWord(id=${word.id})}" class="btn btn-primary">Update</a>-->
                     <form action="/source/deleteWord" method="post">
                         <input type="hidden" name="id" th:value="${word.id}">
                         <button type="submit" class="btn btn-danger">Delete</button>

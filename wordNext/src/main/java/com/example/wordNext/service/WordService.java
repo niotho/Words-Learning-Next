@@ -7,6 +7,7 @@ import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Service;
 import org.springframework.transaction.annotation.Transactional;
 
+import java.time.LocalDateTime;
 import java.util.List;
 import java.util.Optional;
 
@@ -35,11 +36,17 @@ public class WordService {
     public List<Word> findAllBySource(Source source){
         return repository.findBySource(source);
     }
+    public List<Word> findAllByRepeatDate(){
+        return repository.findAllByOrderByRepeatDateDesc();
+    }
     public Word findById(Long id){
         return repository.findById(id).orElseThrow();
     }
     public Word findByWord(String word){
         return repository.findByWord(word);
+    }
+    public Word findFirstByRepeatDate(){
+        return repository.findFirstByOrderByRepeatDateAsc();
     }
     public boolean findIfExistsById(Long id){
 
