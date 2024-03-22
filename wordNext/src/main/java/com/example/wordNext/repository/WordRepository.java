@@ -18,7 +18,8 @@ import java.util.Optional;
 public interface WordRepository extends JpaRepository<Word, Long>{
 
     Word findByWord(String word);
-    Word findFirstByOrderByRepeatDateAsc();
+
+    Word findFirstByStatusNotOrderByRepeatDateAsc(String status);
 
     List<Word> findByCategory(String category);
 
@@ -28,7 +29,7 @@ public interface WordRepository extends JpaRepository<Word, Long>{
 
     List<Word> findBySource(Source source);
 
-    List<Word> findAllByOrderByRepeatDateDesc();
+    List<Word> findAllByStatusNotOrderByRepeatDateAsc(String status);
 
     @Modifying
     @Query(value = "DELETE FROM word_list WHERE id = :id", nativeQuery = true)

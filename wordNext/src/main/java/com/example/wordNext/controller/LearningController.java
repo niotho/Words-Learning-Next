@@ -6,6 +6,7 @@ import com.example.wordNext.service.WordService;
 import jdk.jfr.Category;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.beans.factory.annotation.Value;
+import org.springframework.cglib.core.Local;
 import org.springframework.stereotype.Controller;
 import org.springframework.ui.Model;
 import org.springframework.web.bind.annotation.GetMapping;
@@ -15,6 +16,7 @@ import org.springframework.web.bind.annotation.RequestParam;
 
 import java.time.LocalDateTime;
 import java.util.List;
+import java.util.Objects;
 
 @RequestMapping("/learning")
 @Controller
@@ -33,7 +35,12 @@ public class LearningController {
     public String showRepeatPage(Model model){
 
         LocalDateTime currentTime = LocalDateTime.now();
-        Word word = wordService.findFirstByRepeatDate();
+
+        Word word = wordService.findFirstByRepeatDate("finish");
+
+        if(word == null){
+            return "learning/learning-blank";
+        }
 
         if(currentTime.isBefore(word.getRepeatDate())){
             return "learning/learning-blank";
@@ -51,7 +58,11 @@ public class LearningController {
         Word word = wordService.findById(wordId);
 
         if("yes".equals(answer)){
-            if(Long.parseLong(word.getStatus()) >= 0 && Long.parseLong(word.getStatus()) < 12){
+            if(word.getStatus().equals("8")) {
+                word.setStatus("finish");
+                word.setRepeatDate(LocalDateTime.now());
+                sourceService.save(word.getSource());
+            }else if (Long.parseLong(word.getStatus()) >= 0 && Long.parseLong(word.getStatus()) < 8) {
                 Long status = Long.parseLong(word.getStatus()) + 1;
                 LocalDateTime repeatDate = word.getRepeatDate();
                 LocalDateTime newRepeatDate = repeatDate.plusDays(daysToAdd(word.getStatus()));
@@ -77,11 +88,34 @@ public class LearningController {
     @GetMapping("/list")
     public String showWords(Model model){
 
-        List<Word> words = wordService.findAll();
+        List<Word> words = wordService.findAllByRepeatDate("finish");
 
         model.addAttribute("words", words);
 
         return "learning/learning-list";
+    }
+
+    @GetMapping("/finish")
+    public String finishList(Model model){
+
+        List<Word> words = wordService.findAllByStatus("finish");
+
+        model.addAttribute("words", words);
+
+        return "learning/finish-list";
+    }
+
+    @GetMapping("/reset")
+    public String resetStatus(@RequestParam("id") Long id){
+
+        Word word = wordService.findById(id);
+
+        word.setStatus("0");
+        word.setRepeatDate(LocalDateTime.now());
+
+        wordService.save(word);
+
+        return "redirect:/home";
     }
 
     private int daysToAdd(String status){

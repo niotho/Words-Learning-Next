@@ -92,6 +92,7 @@ public class HomeController {
         model.addAttribute("categories", categories);
         model.addAttribute("LOIs", LOIs);
 
+
         return "/source/create-word";
     }
 
@@ -113,7 +114,7 @@ public class HomeController {
 
         sourceService.save(source);
 
-        return "redirect:/source/wordInfo/" + sourceId;
+        return "redirect:/source";
     }
 
     @GetMapping("/source/showUpdateWord")
@@ -206,5 +207,13 @@ public class HomeController {
         sourceService.deleteSourceById(sourceId);
 
         return "redirect:/source";
+    }
+
+    @GetMapping("/dictionary")
+    public String dictionary(@RequestParam("word") String word){
+
+        String link = "https://dictionary.cambridge.org/dictionary/english/" + word;
+
+        return "redirect:" + link;
     }
 }

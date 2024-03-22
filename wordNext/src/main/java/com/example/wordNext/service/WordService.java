@@ -36,8 +36,8 @@ public class WordService {
     public List<Word> findAllBySource(Source source){
         return repository.findBySource(source);
     }
-    public List<Word> findAllByRepeatDate(){
-        return repository.findAllByOrderByRepeatDateDesc();
+    public List<Word> findAllByRepeatDate(String status){
+        return repository.findAllByStatusNotOrderByRepeatDateAsc(status);
     }
     public Word findById(Long id){
         return repository.findById(id).orElseThrow();
@@ -45,8 +45,8 @@ public class WordService {
     public Word findByWord(String word){
         return repository.findByWord(word);
     }
-    public Word findFirstByRepeatDate(){
-        return repository.findFirstByOrderByRepeatDateAsc();
+    public Word findFirstByRepeatDate(String status){
+        return repository.findFirstByStatusNotOrderByRepeatDateAsc(status);
     }
     public boolean findIfExistsById(Long id){
 
