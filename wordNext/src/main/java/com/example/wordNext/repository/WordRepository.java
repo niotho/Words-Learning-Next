@@ -21,6 +21,10 @@ public interface WordRepository extends JpaRepository<Word, Long>{
 
     Word findFirstByStatusNotOrderByRepeatDateAsc(String status);
 
+    Word findFirstByStatusOrderByRepeatDateAsc(String status);
+
+    Word findFirstBySourceOrderByRepeatDateAsc(Source source);
+
     List<Word> findByCategory(String category);
 
     List<Word> findByStatus(String status);
@@ -30,6 +34,9 @@ public interface WordRepository extends JpaRepository<Word, Long>{
     List<Word> findBySource(Source source);
 
     List<Word> findAllByStatusNotOrderByRepeatDateAsc(String status);
+
+    @Query("SELECT w FROM Word w WHERE w.source.id IN :sourceIds AND w.status != 'finished' ORDER BY w.repeatDate ASC, w.id ASC")
+    List<Word> findFirstOldestByRepeatDateAndStatus(@Param("sourceIds") List<Long> sourceIds);
 
     @Modifying
     @Query(value = "DELETE FROM word_list WHERE id = :id", nativeQuery = true)

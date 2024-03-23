@@ -2,6 +2,8 @@ package com.example.wordNext.service;
 
 import com.example.wordNext.entity.Source;
 import com.example.wordNext.repository.SourceRepository;
+import lombok.AllArgsConstructor;
+import lombok.NoArgsConstructor;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Service;
 import org.springframework.transaction.annotation.Transactional;

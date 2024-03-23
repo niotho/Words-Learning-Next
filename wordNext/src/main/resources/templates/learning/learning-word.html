@@ -33,11 +33,13 @@
                 <form class="mb-3" th:action="@{/learning/handleRepeat}" method="POST">
                     <input type="hidden" name="answer" value="yes">
                     <input type="hidden" name="wordId" th:value="${word.id}">
+                    <input type="hidden" name="wordSources" th:each="sourceId : ${sourceIds}" th:value="${sourceId}">
                     <input type="submit" class="btn btn-primary" value="yes">
                 </form>
                 <form th:action="@{/learning/handleRepeat}" method="POST">
                     <input type="hidden" name="answer" value="no">
                     <input type="hidden" name="wordId" th:value="${word.id}">
+                    <input type="hidden" name="wordSources" th:each="sourceId : ${sourceIds}" th:value="${sourceId}">
                     <input type="submit" class="btn btn-secondary" value="no">
                 </form>
             </div>

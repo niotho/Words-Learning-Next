@@ -1,5 +1,6 @@
 package com.example.wordNext.controller;
 
+import com.example.wordNext.entity.Source;
 import com.example.wordNext.entity.Word;
 import com.example.wordNext.service.SourceService;
 import com.example.wordNext.service.WordService;
@@ -9,10 +10,7 @@ import org.springframework.beans.factory.annotation.Value;
 import org.springframework.cglib.core.Local;
 import org.springframework.stereotype.Controller;
 import org.springframework.ui.Model;
-import org.springframework.web.bind.annotation.GetMapping;
-import org.springframework.web.bind.annotation.PostMapping;
-import org.springframework.web.bind.annotation.RequestMapping;
-import org.springframework.web.bind.annotation.RequestParam;
+import org.springframework.web.bind.annotation.*;
 
 import java.time.LocalDateTime;
 import java.util.List;
@@ -31,29 +29,53 @@ public class LearningController {
         this.wordService = wordService;
     }
 
+    @GetMapping("/repeatForm")
+    public String showRepeatForm(Model model){
+
+        List<Source> sources = sourceService.findAll();
+
+        model.addAttribute("sources", sources);
+
+        return "learning/learning-form";
+    }
+
     @GetMapping("/repeat")
-    public String showRepeatPage(Model model){
+    public String showRepeatPage(Model model,
+                                 @RequestParam(name = "wordSources", required = true) List<Long> sourceIds){
 
         LocalDateTime currentTime = LocalDateTime.now();
 
-        Word word = wordService.findFirstByRepeatDate("finish");
+        List<Word> words = wordService.findFirstOldestAndStatusNotFinished(sourceIds);
 
-        if(word == null){
+        if(words.size() <= 0){
             return "learning/learning-blank";
         }
 
-        if(currentTime.isBefore(word.getRepeatDate())){
+        Word oldestWord = words.get(0);
+
+
+        for(Word eachWord : words){
+            if(eachWord.getRepeatDate().isBefore(oldestWord.getRepeatDate())){
+                oldestWord = eachWord;
+            }
+        }
+
+        if(currentTime.isBefore(oldestWord.getRepeatDate())){
             return "learning/learning-blank";
         }
 
-        model.addAttribute("word", word);
+        model.addAttribute("word", oldestWord);
+        model.addAttribute("sourceIds", sourceIds);
 
         return "learning/learning-word";
     }
 
     @PostMapping("/handleRepeat")
-    public String handleRepeat(@RequestParam("answer") String answer,
-                               @RequestParam("wordId") Long wordId){
+    public String handleRepeat(Model model,
+                               @RequestParam("answer") String answer,
+                               @RequestParam("wordId") Long wordId,
+                               @RequestParam("wordSources") List<Long> sourceIds){
+
 
         Word word = wordService.findById(wordId);
 
@@ -82,7 +104,40 @@ public class LearningController {
             sourceService.save(word.getSource());
         }
 
-        return "redirect:/learning/repeat";
+        model.addAttribute("wordSources", sourceIds);
+
+        return "redirect:/learning/repeatAgain";
+    }
+
+    @GetMapping("/repeatAgain")
+    public String showRepeatPageAgain(Model model,
+                                 @ModelAttribute("wordSources") List<Long> sourceIds){
+
+        LocalDateTime currentTime = LocalDateTime.now();
+
+        List<Word> words = wordService.findFirstOldestAndStatusNotFinished(sourceIds);
+
+        if(words.size() <= 0){
+            return "learning/learning-blank";
+        }
+
+        Word oldestWord = words.get(0);
+
+
+        for(Word eachWord : words){
+            if(eachWord.getRepeatDate().isBefore(oldestWord.getRepeatDate())){
+                oldestWord = eachWord;
+            }
+        }
+
+        if(currentTime.isBefore(oldestWord.getRepeatDate())){
+            return "learning/learning-blank";
+        }
+
+        model.addAttribute("word", oldestWord);
+        model.addAttribute("sourceIds", sourceIds);
+
+        return "learning/learning-word";
     }
 
     @GetMapping("/list")
