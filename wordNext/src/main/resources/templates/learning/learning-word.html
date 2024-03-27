@@ -30,13 +30,13 @@
     <div class="row justify-content-center align-items-center">
         <div class="col-auto">
             <div class="d-flex justify-content-center m-3">
-                <form class="mb-3" th:action="@{/learning/handleRepeat}" method="POST">
+                <form class="mb-3" th:action="@{/learning/repeatAgain}" method="POST">
                     <input type="hidden" name="answer" value="yes">
                     <input type="hidden" name="wordId" th:value="${word.id}">
                     <input type="hidden" name="wordSources" th:each="sourceId : ${sourceIds}" th:value="${sourceId}">
                     <input type="submit" class="btn btn-primary" value="yes">
                 </form>
-                <form th:action="@{/learning/handleRepeat}" method="POST">
+                <form th:action="@{/learning/repeatAgain}" method="POST">
                     <input type="hidden" name="answer" value="no">
                     <input type="hidden" name="wordId" th:value="${word.id}">
                     <input type="hidden" name="wordSources" th:each="sourceId : ${sourceIds}" th:value="${sourceId}">

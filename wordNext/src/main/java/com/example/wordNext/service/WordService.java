@@ -54,8 +54,8 @@ public class WordService {
     public Word findFirstBySourceByRepeatDate(Source source){
         return repository.findFirstBySourceOrderByRepeatDateAsc(source);
     }
-    public List<Word> findFirstOldestAndStatusNotFinished(List<Long> sourceIds){
-        return repository.findFirstOldestByRepeatDateAndStatus(sourceIds);
+    public List<Word> findFirstOldestAndStatusNotFinished(List<Long> sourceIds, String loi){
+        return repository.findFirstOldestByRepeatDateAndStatusAndLOI(sourceIds, loi);
     }
     public boolean findIfExistsById(Long id){
 

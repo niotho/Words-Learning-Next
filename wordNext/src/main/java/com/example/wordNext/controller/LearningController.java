@@ -13,6 +13,7 @@ import org.springframework.ui.Model;
 import org.springframework.web.bind.annotation.*;
 
 import java.time.LocalDateTime;
+import java.util.ArrayList;
 import java.util.List;
 import java.util.Objects;
 
@@ -41,103 +42,22 @@ public class LearningController {
 
     @GetMapping("/repeat")
     public String showRepeatPage(Model model,
-                                 @RequestParam(name = "wordSources", required = true) List<Long> sourceIds){
+                                 @RequestParam(name = "wordSources", required = false) List<Long> sourceIds){
 
-        LocalDateTime currentTime = LocalDateTime.now();
-
-        List<Word> words = wordService.findFirstOldestAndStatusNotFinished(sourceIds);
-
-        if(words.size() <= 0){
-            return "learning/learning-blank";
-        }
-
-        Word oldestWord = words.get(0);
-
-
-        for(Word eachWord : words){
-            if(eachWord.getRepeatDate().isBefore(oldestWord.getRepeatDate())){
-                oldestWord = eachWord;
-            }
-        }
-
-        if(currentTime.isBefore(oldestWord.getRepeatDate())){
-            return "learning/learning-blank";
-        }
-
-        model.addAttribute("word", oldestWord);
-        model.addAttribute("sourceIds", sourceIds);
-
-        return "learning/learning-word";
+        return repeat(model, sourceIds);
     }
 
-    @PostMapping("/handleRepeat")
-    public String handleRepeat(Model model,
-                               @RequestParam("answer") String answer,
-                               @RequestParam("wordId") Long wordId,
-                               @RequestParam("wordSources") List<Long> sourceIds){
-
-
-        Word word = wordService.findById(wordId);
-
-        if("yes".equals(answer)){
-            if(word.getStatus().equals("8")) {
-                word.setStatus("finish");
-                word.setRepeatDate(LocalDateTime.now());
-                sourceService.save(word.getSource());
-            }else if (Long.parseLong(word.getStatus()) >= 0 && Long.parseLong(word.getStatus()) < 8) {
-                Long status = Long.parseLong(word.getStatus()) + 1;
-                LocalDateTime repeatDate = word.getRepeatDate();
-                LocalDateTime newRepeatDate = repeatDate.plusDays(daysToAdd(word.getStatus()));
-
-                word.setStatus(status.toString());
-                word.setRepeatDate(newRepeatDate);
-
-                sourceService.save(word.getSource());
-            }
-        }
-
-        if("no".equals(answer)){
-
-            word.setStatus("0");
-            word.setRepeatDate(LocalDateTime.now().minusHours(1));
-
-            sourceService.save(word.getSource());
-        }
-
-        model.addAttribute("wordSources", sourceIds);
-
-        return "redirect:/learning/repeatAgain";
-    }
-
-    @GetMapping("/repeatAgain")
+    @PostMapping("/repeatAgain")
     public String showRepeatPageAgain(Model model,
-                                 @ModelAttribute("wordSources") List<Long> sourceIds){
+                                      @RequestParam("answer") String answer,
+                                      @RequestParam("wordId") Long wordId,
+                                      @RequestParam("wordSources") List<Long> sourceIds){
 
-        LocalDateTime currentTime = LocalDateTime.now();
+        //Handle Repeat
+        handleRepeat(wordId, answer);
 
-        List<Word> words = wordService.findFirstOldestAndStatusNotFinished(sourceIds);
-
-        if(words.size() <= 0){
-            return "learning/learning-blank";
-        }
-
-        Word oldestWord = words.get(0);
-
-
-        for(Word eachWord : words){
-            if(eachWord.getRepeatDate().isBefore(oldestWord.getRepeatDate())){
-                oldestWord = eachWord;
-            }
-        }
-
-        if(currentTime.isBefore(oldestWord.getRepeatDate())){
-            return "learning/learning-blank";
-        }
-
-        model.addAttribute("word", oldestWord);
-        model.addAttribute("sourceIds", sourceIds);
-
-        return "learning/learning-word";
+        //handle
+        return repeat(model, sourceIds);
     }
 
     @GetMapping("/list")
@@ -165,7 +85,7 @@ public class LearningController {
 
         Word word = wordService.findById(id);
 
-        word.setStatus("0");
+        word.setStatus("1");
         word.setRepeatDate(LocalDateTime.now());
 
         wordService.save(word);
@@ -173,22 +93,103 @@ public class LearningController {
         return "redirect:/home";
     }
 
-    private int daysToAdd(String status){
+    private int hoursToAdd(String status){
 
-        int daysToAdd = switch (status){
+        int hoursToAdd = switch (status){
             case "0" -> 1;
-            case "1" -> 1;
-            case "2" -> 1;
-            case "3" -> 2;
-            case "4" -> 3;
-            case "5" -> 4;
-            case "6" -> 7;
-            case "7" -> 14;
-            case "8" -> 28;
+            case "1" -> 24;
+            case "2" -> 24;
+            case "3" -> 24 * 2;
+            case "4" -> 24 * 3;
+            case "5" -> 24 * 4;
+            case "6" -> 24 * 7;
+            case "7" -> 24 * 14;
+            case "8" -> 24 * 28;
             case "finish" -> 0;
             default -> 0;
         };
 
-        return daysToAdd;
+        return hoursToAdd;
+    }
+
+    private void handleRepeat(Long wordId, String answer){
+        Word word = wordService.findById(wordId);
+
+        if("yes".equals(answer)){
+            if(word.getStatus().equals("8")) {
+                word.setStatus("finish");
+                word.setRepeatDate(LocalDateTime.now());
+                sourceService.save(word.getSource());
+            } else if (Long.parseLong(word.getStatus()) >= 0 && Long.parseLong(word.getStatus()) < 8) {
+                Long status = Long.parseLong(word.getStatus()) + 1;
+                LocalDateTime repeatDate = word.getRepeatDate();
+                LocalDateTime newRepeatDate = repeatDate.plusHours(hoursToAdd(word.getStatus()));
+
+                word.setStatus(status.toString());
+                word.setRepeatDate(newRepeatDate);
+
+                sourceService.save(word.getSource());
+            }
+        }
+
+        if("no".equals(answer)){
+
+            word.setStatus("1");
+            word.setRepeatDate(LocalDateTime.now().minusHours(1));
+
+            sourceService.save(word.getSource());
+        }
+    }
+
+    private String repeat(Model model, List<Long> sourceIds){
+        if(sourceIds == null){
+            List<Source> sources = sourceService.findAll();
+            sourceIds = new ArrayList<>();
+
+            for (Source source : sources) {
+                sourceIds.add(source.getId());
+            }
+        }
+
+        LocalDateTime currentTime = LocalDateTime.now();
+
+        List<Word> wordsTest = wordService.findFirstOldestAndStatusNotFinished(sourceIds, "important");
+        List<Word> words;
+
+        Word testWord = wordsTest.get(0);
+
+        for(Word eachWord : wordsTest){
+            if(eachWord.getRepeatDate().isBefore(testWord.getRepeatDate())){
+                testWord = eachWord;
+            }
+        }
+
+        if(currentTime.isBefore(testWord.getRepeatDate())){
+            words = wordService.findFirstOldestAndStatusNotFinished(sourceIds, "not important");
+        }else{
+            words = wordService.findFirstOldestAndStatusNotFinished(sourceIds, "important");
+        }
+
+        if(words.size() <= 0){
+            return "learning/learning-blank";
+        }
+
+        Word oldestWord = words.get(0);
+
+
+        for(Word eachWord : words){
+            if(eachWord.getRepeatDate().isBefore(oldestWord.getRepeatDate())){
+                oldestWord = eachWord;
+            }
+        }
+
+        if(currentTime.isBefore(oldestWord.getRepeatDate())){
+            return "learning/learning-blank";
+        }
+
+        model.addAttribute("word", oldestWord);
+        model.addAttribute("sourceIds", sourceIds);
+
+        return "learning/learning-word";
     }
 }
